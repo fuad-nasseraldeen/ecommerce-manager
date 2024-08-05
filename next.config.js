@@ -6,6 +6,9 @@ const nextConfig = {
   experimental: {
     appDir: true,
   },
+  api: {
+    bodyParser: false, // Disable body parser for all API routes
+  },
 }
 
 module.exports = nextConfig

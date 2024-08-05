@@ -70,7 +70,3 @@ export async function DELETE(req, res) {
     return new Response(JSON.stringify({ message: 'Error deleting image' }), { status: 500 })
   }
 }
-
-export const config = {
-  api: { bodyParser: false },
-}
