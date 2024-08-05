@@ -1,7 +1,7 @@
 import { Category } from 'base/models/Category'
 import { mongooseConnect } from 'base/lib/mongoose'
 import { getServerSession } from 'next-auth'
-import { authOptions, isAdminRequest } from '@/api/auth/[...nextauth]/route'
+import { authOptions } from '@/api/auth/[...nextauth]/route'
 
 export async function GET(req, res) {
   await mongooseConnect()

@@ -24,9 +24,9 @@ const handler = async (req, res) => {
 
 export { handler as GET, handler as POST }
 
-export async function isAdminRequest() {
-  const session = await getServerSession(authOptions)
-  if (!adminEmails.includes(session?.user?.email)) {
-    throw new Error('not an admin')
-  }
-}
+// export async function isAdminRequest() {
+//   const session = await getServerSession(authOptions)
+//   if (!adminEmails.includes(session?.user?.email)) {
+//     throw new Error('not an admin')
+//   }
+// }

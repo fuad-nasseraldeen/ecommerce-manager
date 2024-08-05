@@ -2,7 +2,7 @@
 
 import { Product } from '../../../models/Product'
 import { mongooseConnect } from '../../../lib/mongoose'
-import { isAdminRequest } from '../auth/[...nextauth]/route'
+// import { isAdminRequest } from '../auth/[...nextauth]/route'
 import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3'
 
 export async function GET(req) {

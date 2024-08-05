@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import mime from 'mime-types'
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3'
 import { mongooseConnect } from 'base/lib/mongoose'
-import { isAdminRequest } from '@/api/auth/[...nextauth]/route'
+// import { isAdminRequest } from '@/api/auth/[...nextauth]/route'
 
 const bucketName = process.env.AWS_BUCKET_NAME
 
