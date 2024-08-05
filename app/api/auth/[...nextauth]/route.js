@@ -1,7 +1,7 @@
 // src/app/api/auth/[...nextauth].js
 import NextAuth, { getServerSession } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
-import { MongoDBAdapter } from '@auth/mongodb-adapter'
+import { MongoDBAdapter } from '@next-auth/mongodb-adapter'
 import clientPromise from '../../../../lib/mongodb'
 
 const adminEmails = ['fuad.nasseraldeen@gmail.com']
