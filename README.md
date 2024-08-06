@@ -5,21 +5,20 @@ A website where admins can post, edit, and delete shopping items, set prices, an
 This project is a web application that integrates various technologies for a seamless user experience. The key components of the project include:
 
 ## System Requirements:
-Node.js version 18 or above
-npm version 10.2.3
-MongoDB Atlas
-AWS
-Google Developer Console
+1. Node.js version 18 or above
+2. npm version 10.2.3
+3. MongoDB Atlas
+4. AWS
+5. Google Developer Console
 
 
 ## Technologies Used:
-Front-end: Next.js
-Back-end: Node.js (version 18 or above), Express.js
-Database: MongoDB (Atlas)
-File Storage: Amazon S3 (AWS)
-Styling: Tailwind CSS
-Alerts: react-sweetalert2
-HTTP Client: axios
+1. Front-end/back-end: Next.js
+2. Database: MongoDB (Atlas)
+3. File Storage: Amazon S3 (AWS)
+4. Styling: Tailwind CSS
+5. Alerts: react-sweetalert2
+6. HTTP Client: axios
 
 
 1. Google OAuth Authentication
