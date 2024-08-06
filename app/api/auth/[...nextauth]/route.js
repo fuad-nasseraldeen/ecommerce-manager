@@ -1,21 +1,8 @@
 // src/app/api/auth/[...nextauth].js
 import NextAuth, { getServerSession } from 'next-auth'
-import GoogleProvider from 'next-auth/providers/google'
-import { MongoDBAdapter } from '@next-auth/mongodb-adapter'
-import clientPromise from '../../../../lib/mongodb'
+import { authOptions } from '../../../../utils/authOptions'
 
 const adminEmails = ['fuad.nasseraldeen@gmail.com']
-
-export const authOptions = {
-  secret: process.env.NEXTAUTH_SECRET,
-  providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_SECRET,
-    }),
-  ],
-  adapter: MongoDBAdapter(clientPromise),
-}
 
 const handler = async (req, res) => {
   console.log('API Route Hit')
