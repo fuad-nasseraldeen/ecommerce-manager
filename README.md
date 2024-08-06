@@ -18,7 +18,8 @@ This project is a web application that integrates various technologies for a sea
 3. File Storage: Amazon S3 (AWS)
 4. Styling: Tailwind CSS
 5. Alerts: react-sweetalert2
-6. HTTP Client: axios
+6. Drag-and-Drop Sorting: react-sortablejs
+7. HTTP Client: axios
 
 
 1. Google OAuth Authentication
