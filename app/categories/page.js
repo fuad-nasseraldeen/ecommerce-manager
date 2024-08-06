@@ -27,7 +27,7 @@ function Categories({ swal }) {
       } catch (error) {
         console.error('Error fetching data:', error)
       } finally {
-        setLoading(false)
+        // setLoading(false)
       }
     }
     fetchCategories()
@@ -144,11 +144,7 @@ function Categories({ swal }) {
   }
 
   if (loading) {
-    return (
-      <div className='flex justify-center items-center h-96'>
-        <Spinner />
-      </div>
-    )
+    return <Spinner />
   }
 
   return (
