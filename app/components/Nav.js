@@ -25,7 +25,7 @@ export default function Nav({ show }) {
         <Logo />
       </div>
       <nav className='flex flex-col gap-2 '>
-        <Link href={'/'} className={pathname === '/' ? activeLink : inactiveLink}>
+        {/* <Link href={'/'} className={pathname === '/' ? activeLink : inactiveLink}>
           <svg
             xmlns='http://www.w3.org/2000/svg'
             fill='none'
@@ -41,7 +41,7 @@ export default function Nav({ show }) {
             />
           </svg>
           Dashboard
-        </Link>
+        </Link> */}
         <Link href={'/products'} className={pathname?.includes('/products') ? activeLink : inactiveLink}>
           <svg
             xmlns='http://www.w3.org/2000/svg'

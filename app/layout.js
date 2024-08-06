@@ -1,6 +1,6 @@
 import './styles/globals.css'
 import { getServerSession } from 'next-auth/next'
-import { authOptions } from './api/auth/[...nextauth]/route'
+import { authOptions } from '../utils/authOptions.ts'
 import CustomSessionProvider from './components/SessionProviders'
 
 export default async function RootLayout({ children }) {

@@ -1,6 +1,6 @@
 // src/app/api/auth/[...nextauth].js
 import NextAuth, { getServerSession } from 'next-auth'
-import { authOptions } from '../../../../utils/authOptions'
+import { authOptions } from '../../../../utils/authOptions.ts'
 
 const adminEmails = ['fuad.nasseraldeen@gmail.com']
 
