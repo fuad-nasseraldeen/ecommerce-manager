@@ -4,6 +4,24 @@ A website where admins can post, edit, and delete shopping items, set prices, an
 ## Project Overview
 This project is a web application that integrates various technologies for a seamless user experience. The key components of the project include:
 
+## System Requirements:
+Node.js version 18 or above
+npm version 10.2.3
+MongoDB Atlas
+AWS
+Google Developer Console
+
+
+## Technologies Used:
+Front-end: React.js
+Back-end: Node.js (version 18 or above), Express.js
+Database: MongoDB (Atlas)
+File Storage: Amazon S3 (AWS)
+Styling: Tailwind CSS
+Alerts: react-sweetalert2
+HTTP Client: axios
+
+
 1. Google OAuth Authentication
 Purpose: To provide secure user authentication using Google accounts.
 Implementation:
@@ -38,36 +56,80 @@ Implemented data fetching and state updates in React components.
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 
+## how it will work
+npm install
 
-First, run the development server:
+## add .env file with this keys
+GOOGLE_ID=""
+GOOGLE_SECRET=""
+MONGODB_URI="mongodb+srv://<>:<>@cluster0.cbzjiuy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+NODE_ENV=''
+S3_ACCESS_KEY=""
+S3_SECRET_ACCESS_KEY=""
+AWS_REGION=""
+AWS_BUCKET_NAME=""
+NEXTAUTH_SECRET=""
 
-```bash
+## start
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## for prodcution deployment
+1. add the .env file or add the key:value in this file in vercel deployment 
+    Steps to Add .env content in Vercel
+    Go to Your Vercel Dashboard:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+    Open the Vercel dashboard.
+    Select your project.
+    Navigate to Environment Variables:
 
-## Learn More
+    Go to the "Settings" tab of your project.
+    Select "Environment Variables" from the sidebar.
 
-To learn more about Next.js, take a look at the following resources:
+2. add the NEXTAUTH_URL to your key:value
+    Steps to Add NEXTAUTH_URL in Vercel
+    Go to Your Vercel Dashboard:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+    Open the Vercel dashboard.
+    Select your project.
+    Navigate to Environment Variables:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+    Go to the "Settings" tab of your project.
+    Select "Environment Variables" from the sidebar.
+    Add the NEXTAUTH_URL Variable:
 
-## Deploy on Vercel
+    Click on "Add a new variable".
+    Set the "Key" to NEXTAUTH_URL.
+    Set the "Value" to the URL of your deployed application, e.g., https://your-domain.vercel.app.
+    Choose the environment (Production, Preview, Development) where you want this variable to be available.
+    
+    Adding NEXTAUTH_URL to your Vercel environment is essential for NextAuth.js to function correctly in a production environment. Here are the key reasons:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+        Redirect URLs: NextAuth.js uses the NEXTAUTH_URL environment variable to generate the correct URLs for OAuth callbacks and other redirects. This ensures that after a user authenticates with an external provider (like Google), they are redirected back to the correct URL of your application.
+        key NEXTAUTH_URL 
+        value your vercel domain 
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+3. Adding https://your-domain/api/auth/callback/google to the Google Cloud Console (https://console.cloud.google.com/)
+Reasons for Adding the Callback URL to Google Cloud Console
+OAuth 2.0 Redirect URL:
+
+OAuth 2.0 requires a redirect URL to be specified. This URL is where Google will send the user after they have authenticated. By registering this URL with Google, you ensure that Google will redirect authenticated users back to your application.
+Security:
+
+Google verifies that the redirect URL provided in the authentication request matches one of the authorized URLs specified in the Google Cloud Console. This prevents malicious actors from hijacking the OAuth flow and redirecting users to a different, unauthorized URL.
+Consistency and Correctness:
+
+Ensuring the correct redirect URL is essential for a smooth authentication process. If the redirect URL does not match what is registered, the authentication process will fail.
+Steps to Add the Redirect URI in Google Cloud Console
+Go to Google Cloud Console:
+
+Navigate to the Google Cloud Console and select your project.
+Navigate to OAuth 2.0 Credentials:
+
+Go to the "APIs & Services" section.
+Select "Credentials".
+Find your OAuth 2.0 Client ID under "OAuth 2.0 Client IDs".
+Edit the OAuth 2.0 Client ID:
+
+Click on your OAuth 2.0 Client ID to edit it.
+In the "Authorized redirect URIs" section, add the URL https://your-domain/api/auth/callback/google.
