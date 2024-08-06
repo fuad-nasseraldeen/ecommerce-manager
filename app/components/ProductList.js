@@ -14,7 +14,7 @@ export default function ProductList({ products }) {
               </div>
             )}
           </div>
-          <div className='p-4 bg-gradient-to-r from-purple-950 via-purple-700 to-purple-400 text-white rounded-lg scale-95'>
+          <div className='p-4 bg-primary text-white rounded-lg scale-95 shiny-gradient'>
             <div className='flex flex-col justify-between items-center '>
               <p className='text-lg h-40 overflow-overlay'>{product.description}</p>
               <br />

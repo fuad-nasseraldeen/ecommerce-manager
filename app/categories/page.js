@@ -3,6 +3,7 @@ import Layout from '@/components/Layout'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { withSwal } from 'react-sweetalert2'
+import Spinner from '../components/Spinner'
 
 const initialErrors = {
   name: '',
@@ -15,10 +16,24 @@ function Categories({ swal }) {
   const [parentCategory, setParentCategory] = useState('')
   const [categories, setCategories] = useState([])
   const [properties, setProperties] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  // Fetch categories effect
   useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('/api/categories')
+        setCategories(response.data)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
     fetchCategories()
   }, [])
 
+  // Error handling effect
   useEffect(() => {
     if (errors?.name) {
       const timer = setTimeout(() => {
@@ -32,11 +47,6 @@ function Categories({ swal }) {
     }
   }, [errors])
 
-  function fetchCategories() {
-    axios.get('/api/categories').then((result) => {
-      setCategories(result.data)
-    })
-  }
   async function saveCategory(ev) {
     ev.preventDefault()
 
@@ -52,18 +62,25 @@ function Categories({ swal }) {
         values: p.values.split(','),
       })),
     }
-    if (editedCategory) {
-      data._id = editedCategory._id
-      await axios.put('/api/categories', data)
-      setEditedCategory(null)
-    } else {
-      await axios.post('/api/categories', data)
+    try {
+      if (editedCategory) {
+        data._id = editedCategory._id
+        await axios.put('/api/categories', data)
+        setEditedCategory(null)
+      } else {
+        await axios.post('/api/categories', data)
+      }
+      setName('')
+      setParentCategory('')
+      setProperties([])
+      // Refetch categories to update the list
+      const response = await axios.get('/api/categories')
+      setCategories(response.data)
+    } catch (error) {
+      console.error('Error saving category:', error)
     }
-    setName('')
-    setParentCategory('')
-    setProperties([])
-    fetchCategories()
   }
+
   function editCategory(category) {
     setEditedCategory(category)
     setName(category.name)
@@ -75,6 +92,7 @@ function Categories({ swal }) {
       })),
     )
   }
+
   function deleteCategory(category) {
     swal
       .fire({
@@ -88,38 +106,51 @@ function Categories({ swal }) {
       })
       .then(async (result) => {
         if (result.isConfirmed) {
-          const { _id } = category
-          await axios.delete('/api/categories?_id=' + _id)
-          fetchCategories()
+          try {
+            const { _id } = category
+            await axios.delete('/api/categories?_id=' + _id)
+            // Refetch categories to update the list
+            const response = await axios.get('/api/categories')
+            setCategories(response.data)
+          } catch (error) {
+            console.error('Error deleting category:', error)
+          }
         }
       })
   }
+
   function addProperty() {
-    setProperties((prev) => {
-      return [...prev, { name: '', values: '' }]
-    })
+    setProperties((prev) => [...prev, { name: '', values: '' }])
   }
-  function handlePropertyNameChange(index, property, newName) {
+
+  function handlePropertyNameChange(index, newName) {
     setProperties((prev) => {
       const properties = [...prev]
       properties[index].name = newName
       return properties
     })
   }
-  function handlePropertyValuesChange(index, property, newValues) {
+
+  function handlePropertyValuesChange(index, newValues) {
     setProperties((prev) => {
       const properties = [...prev]
       properties[index].values = newValues
       return properties
     })
   }
+
   function removeProperty(indexToRemove) {
-    setProperties((prev) => {
-      return [...prev].filter((p, pIndex) => {
-        return pIndex !== indexToRemove
-      })
-    })
+    setProperties((prev) => prev.filter((_, pIndex) => pIndex !== indexToRemove))
   }
+
+  if (loading) {
+    return (
+      <div className='flex justify-center items-center h-96'>
+        <Spinner />
+      </div>
+    )
+  }
+
   return (
     <Layout>
       <h1>Categories</h1>
@@ -130,7 +161,7 @@ function Categories({ swal }) {
             <input
               className={`${errors?.name ? 'mb-0 border-red-600' : ''}`}
               type='text'
-              placeholder={'Category name'}
+              placeholder='Category name'
               onChange={(ev) => setName(ev.target.value)}
               value={name}
             />
@@ -158,18 +189,18 @@ function Categories({ swal }) {
           </button>
           {properties.length > 0 &&
             properties.map((property, index) => (
-              <div key={property.name} className='flex gap-1 mb-2'>
+              <div key={index} className='flex gap-1 mb-2'>
                 <input
                   type='text'
                   value={property.name}
                   className='mb-0'
-                  onChange={(ev) => handlePropertyNameChange(index, property, ev.target.value)}
+                  onChange={(ev) => handlePropertyNameChange(index, ev.target.value)}
                   placeholder='property name (example: color)'
                 />
                 <input
                   type='text'
                   className='mb-0'
-                  onChange={(ev) => handlePropertyValuesChange(index, property, ev.target.value)}
+                  onChange={(ev) => handlePropertyValuesChange(index, ev.target.value)}
                   value={property.values}
                   placeholder='values, comma separated'
                 />
@@ -209,7 +240,7 @@ function Categories({ swal }) {
             </tr>
           </thead>
           <tbody>
-            {categories.length > 0 &&
+            {categories.length > 0 ? (
               categories.map((category) => (
                 <tr key={category._id}>
                   <td>{category.name}</td>
@@ -223,7 +254,10 @@ function Categories({ swal }) {
                     </button>
                   </td>
                 </tr>
-              ))}
+              ))
+            ) : (
+              <p>No categories found.</p>
+            )}
           </tbody>
         </table>
       )}

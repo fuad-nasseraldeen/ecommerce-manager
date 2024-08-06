@@ -4,20 +4,42 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import ProductList from '@/components/ProductList'
+import Spinner from '../components/Spinner'
+
 export default function Products() {
   const [products, setProducts] = useState([])
+  const [loading, setLoading] = useState([true])
   useEffect(() => {
-    axios.get('/api/products').then((response) => {
-      setProducts(response.data)
-    })
+    const fetchData = async () => {
+      try {
+        // Simulate loading delay
+
+        const response = await axios.get('api/products')
+        setProducts(response.data)
+      } catch (error) {
+        console.error('Error fetching data:', error)
+      } finally {
+        setLoading(false) // Set loading to false after data is fetched or if there's an error
+      }
+    }
+    fetchData()
   }, [])
+
+  if (loading) {
+    return (
+      <div className='flex justify-center items-center h-96'>
+        <Spinner />
+      </div>
+    )
+  }
+
   return (
     <Layout>
       <Link className='btn-primary mb-4' href={'/products/new'}>
         Add new product
       </Link>
       <h1>ProductName</h1>
-      <ProductList products={products} />
+      {products.length === 0 ? <p>No products found.</p> : <ProductList products={products} />}
     </Layout>
   )
 }

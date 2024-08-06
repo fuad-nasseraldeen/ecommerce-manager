@@ -29,7 +29,7 @@ export default function Carousel({ images, id }) {
         className='absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none'
         onClick={handlePrev}
       >
-        <span className='inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 group-hover:bg-white/50 focus:ring-4 focus:ring-white group-focus:outline-none'>
+        <span className='inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/30 group-hover:bg-primary/50 focus:ring-4 focus:ring-white group-focus:outline-none'>
           <svg
             className='w-4 h-4 text-white'
             aria-hidden='true'
@@ -47,7 +47,7 @@ export default function Carousel({ images, id }) {
         className='absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none'
         onClick={handleNext}
       >
-        <span className='inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 group-hover:bg-white/50 focus:ring-4 focus:ring-white group-focus:outline-none'>
+        <span className='inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/30 group-hover:bg-primary/50 focus:ring-4 focus:ring-white group-focus:outline-none'>
           <svg
             className='w-4 h-4 text-white'
             aria-hidden='true'
