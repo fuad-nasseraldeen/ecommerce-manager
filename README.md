@@ -13,7 +13,7 @@ Google Developer Console
 
 
 ## Technologies Used:
-Front-end: React.js
+Front-end: Next.js
 Back-end: Node.js (version 18 or above), Express.js
 Database: MongoDB (Atlas)
 File Storage: Amazon S3 (AWS)
