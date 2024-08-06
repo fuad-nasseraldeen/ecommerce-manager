@@ -7,7 +7,7 @@ import clientPromise from '../../../../lib/mongodb'
 const adminEmails = ['fuad.nasseraldeen@gmail.com']
 
 export const authOptions = {
-  secret: process.env.SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_ID,
