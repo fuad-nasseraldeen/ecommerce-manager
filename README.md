@@ -60,15 +60,15 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 npm install
 
 ## add .env file with this keys
-GOOGLE_ID=""
-GOOGLE_SECRET=""
-MONGODB_URI="mongodb+srv://<>:<>@cluster0.cbzjiuy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-NODE_ENV=''
-S3_ACCESS_KEY=""
-S3_SECRET_ACCESS_KEY=""
-AWS_REGION=""
-AWS_BUCKET_NAME=""
-NEXTAUTH_SECRET=""
+1. OOGLE_ID=""
+2. GOOGLE_SECRET=""
+3. MONGODB_URI="mongodb+srv://<>:<>@cluster0.cbzjiuy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+4. NODE_ENV=''
+5. S3_ACCESS_KEY=""
+6. S3_SECRET_ACCESS_KEY=""
+7. AWS_REGION=""
+8. AWS_BUCKET_NAME=""
+9. NEXTAUTH_SECRET=""
 
 ## start
 npm run dev
