@@ -6,7 +6,7 @@ export default function Home({ children }) {
   const [showNav, setShowNav] = useState(false)
 
   return (
-    <div className='bg-bgGray min-h-screen '>
+    <div className='bg-blue-50 min-h-screen '>
       <div className='block md:hidden flex items-center p-4'>
         <button onClick={() => setShowNav(true)}>
           <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor' className='w-6 h-6'>
