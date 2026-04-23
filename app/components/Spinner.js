@@ -1,9 +1,9 @@
 import { BounceLoader } from 'react-spinners'
 
-export default function Spinner() {
+export default function Spinner({ fullScreen = true }) {
   return (
-    <div className='flex justify-center items-center h-screen'>
-      <BounceLoader color={'#5542F6'} speedMultiplier={2} size={'50px'} />
+    <div className={`flex items-center justify-center ${fullScreen ? 'h-screen' : 'h-24'}`}>
+      <BounceLoader color={'#0f766e'} speedMultiplier={1.6} size={'50px'} />
     </div>
   )
 }

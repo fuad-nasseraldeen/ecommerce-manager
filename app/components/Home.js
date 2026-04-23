@@ -6,8 +6,8 @@ export default function Home({ children }) {
   const [showNav, setShowNav] = useState(false)
 
   return (
-    <div className='bg-blue-50 min-h-screen '>
-      <div className='block md:hidden flex items-center p-4'>
+    <div className='min-h-screen bg-slate-50'>
+      <div className='flex items-center border-b border-slate-200 bg-white px-4 py-3 md:hidden'>
         <button onClick={() => setShowNav(true)}>
           <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor' className='w-6 h-6'>
             <path
@@ -17,13 +17,13 @@ export default function Home({ children }) {
             />
           </svg>
         </button>
-        <div className='flex grow justify-center mr-6'>
+        <div className='mr-6 flex grow justify-center'>
           <Logo />
         </div>
       </div>
       <div className='flex'>
-        <Nav show={showNav} />
-        <div className='flex-grow p-4'>{children}</div>
+        <Nav show={showNav} onClose={() => setShowNav(false)} />
+        <main className='flex-1 p-3 sm:p-4 lg:p-6'>{children}</main>
       </div>
     </div>
   )

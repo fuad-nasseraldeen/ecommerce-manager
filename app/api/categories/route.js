@@ -3,6 +3,8 @@ import { mongooseConnect } from 'base/lib/mongoose'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '../../../utils/authOptions.ts'
 
+export const dynamic = 'force-dynamic'
+
 export async function GET(req, res) {
   await mongooseConnect()
   // await isAdminRequest()
@@ -54,7 +56,10 @@ export async function DELETE(req, res) {
     await mongooseConnect()
     const { searchParams } = new URL(req.url)
     const id = searchParams.get('id')
-    await Category.deleteOne({ id })
+    if (!id) {
+      return new Response(JSON.stringify({ message: 'Category ID is required' }), { status: 400 })
+    }
+    await Category.deleteOne({ _id: id })
     return new Response(null, { status: 204 }) // Using native Response for 204 status
   } catch (error) {
     console.error('Error deleting category', error)

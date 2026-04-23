@@ -4,12 +4,9 @@ import Spinner from '@/components/Spinner'
 import { ReactSortable } from 'react-sortablejs'
 import Modal from '@/components/Modal'
 const UploadImages = ({ images, setImages, isUploading, setIsUploading }) => {
-  const [deleteIndex, setDeleteIndex] = useState(0)
+  const [deleteIndex, setDeleteIndex] = useState(null)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const [errors, setErrors] = useState({
-    uploadingErrors: '',
-    fillMandatoryErrors: '',
-  })
+  const [uploadingError, setUploadingError] = useState('')
 
   const uploadImages = async (ev) => {
     const files = ev.target?.files
@@ -23,9 +20,9 @@ const UploadImages = ({ images, setImages, isUploading, setIsUploading }) => {
         const res = await axios.post('/api/upload', data)
         const newImages = [...images, ...res.data.link]
         setImages(newImages)
-        setErrors((prevErrors) => ({ ...prevErrors, uploadingErrors: '' }))
+        setUploadingError('')
       } catch (error) {
-        setErrors((prevErrors) => ({ ...prevErrors, uploadingErrors: 'Failed to upload images' }))
+        setUploadingError('Failed to upload images')
       } finally {
         setIsUploading(false)
       }
@@ -41,22 +38,20 @@ const UploadImages = ({ images, setImages, isUploading, setIsUploading }) => {
     setShowDeleteModal(true)
   }
 
-  const handleDelete = async (file, index) => {
-    if (deleteIndex !== null) {
-      try {
-        const res = await axios.delete('/api/upload?id=' + file)
-        console.log(res)
-        if (res.statusText) {
-          console.log('Image deleted successfully')
-          const newImages = images.filter((_, i) => i !== index)
-          setImages(newImages)
-        }
-      } catch (error) {
-        console.error('Error deleting image:', error)
-      } finally {
-        setShowDeleteModal(false)
-        setDeleteIndex(null)
-      }
+  const handleDelete = async (indexToDelete) => {
+    if (indexToDelete === null || indexToDelete === undefined) {
+      return
+    }
+
+    try {
+      const file = images[indexToDelete]
+      await axios.delete('/api/upload?id=' + file)
+      setImages(images.filter((_, i) => i !== indexToDelete))
+    } catch (error) {
+      console.error('Error deleting image:', error)
+    } finally {
+      setShowDeleteModal(false)
+      setDeleteIndex(null)
     }
   }
 
@@ -68,7 +63,7 @@ const UploadImages = ({ images, setImages, isUploading, setIsUploading }) => {
         <div key={index} className='relative h-32 bg-white p-2 shadow-sm rounded-sm border border-gray-200'>
           <button
             className='absolute z-20 top-1 right-1 m-2 text-red-600 hover:text-red-800'
-            onClick={() => onDeleteImage(file, index)}
+            onClick={() => onDeleteImage(index)}
           >
             <svg
               xmlns='http://www.w3.org/2000/svg'
@@ -131,10 +126,10 @@ const UploadImages = ({ images, setImages, isUploading, setIsUploading }) => {
               <div>Add image</div>
             </>
           )}
-          <input type='file' onChange={uploadImages} className='hidden' />
+          <input type='file' multiple onChange={uploadImages} className='hidden' />
         </label>
       </div>
-      {errors.uploadingErrors && <p className='text-red-600'>{errors.uploadingErrors}</p>}
+      {uploadingError && <p className='text-red-600'>{uploadingError}</p>}
       <Modal
         handleDelete={handleDelete}
         deleteIndex={deleteIndex}

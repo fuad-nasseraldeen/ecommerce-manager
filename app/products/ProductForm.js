@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import axios from 'axios'
 import Spinner from '@/components/Spinner'
@@ -107,16 +107,27 @@ export default function ProductForm({
       return newProductProps
     })
   }
-  const propertiesToFill = []
-  if (categories.length > 0 && category) {
-    let catInfo = categories.find(({ _id }) => _id === category)
-    propertiesToFill.push(...catInfo.properties)
-    while (catInfo?.parent?._id) {
-      const parentCat = categories.find(({ _id }) => _id === catInfo?.parent?._id)
-      propertiesToFill.push(...parentCat.properties)
-      catInfo = parentCat
+  const propertiesToFill = useMemo(() => {
+    const nextPropertiesToFill = []
+    if (categories.length > 0 && category) {
+      let catInfo = categories.find(({ _id }) => _id === category)
+      if (catInfo?.properties?.length) {
+        nextPropertiesToFill.push(...catInfo.properties)
+      }
+      while (catInfo?.parent?._id) {
+        const parentCat = categories.find(({ _id }) => _id === catInfo?.parent?._id)
+        if (!parentCat) {
+          break
+        }
+        if (parentCat?.properties?.length) {
+          nextPropertiesToFill.push(...parentCat.properties)
+        }
+        catInfo = parentCat
+      }
     }
-  }
+
+    return nextPropertiesToFill
+  }, [categories, category])
 
   return (
     <div>

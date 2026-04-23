@@ -4,9 +4,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '#5542F6',
-        highlight: '#eae8fb',
-        bgGray: '#fbfafd',
+        primary: '#0f766e',
+        primaryDark: '#115e59',
+        primarySoft: '#ccfbf1',
+        highlight: '#fef3c7',
+        bgGray: '#f8fafc',
+        surface: '#ffffff',
+        ink: '#0f172a',
       },
       overflow: {
         overlay: 'overlay',

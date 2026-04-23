@@ -1,8 +1,12 @@
 import { useState } from 'react'
 import Image from 'next/image'
 
-export default function Carousel({ images, id }) {
+export default function Carousel({ images }) {
   const [currentIndex, setCurrentIndex] = useState(0)
+
+  if (!images?.length) {
+    return <div className='flex h-full items-center justify-center rounded-lg bg-slate-100 text-sm text-slate-500'>No image</div>
+  }
 
   const handlePrev = () => {
     setCurrentIndex((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1))
@@ -19,17 +23,19 @@ export default function Carousel({ images, id }) {
           key={currentIndex}
           src={images[currentIndex]}
           alt={`Product image ${currentIndex}`}
-          layout='fill'
-          objectFit='contain'
-          className='rounded-lg'
+          fill
+          sizes='(max-width: 768px) 100vw, 33vw'
+          className='rounded-lg object-contain'
+          unoptimized
+          priority={currentIndex === 0}
         />
       </div>
       <button
         type='button'
-        className='absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none'
+        className='group absolute left-0 top-0 z-30 flex h-full cursor-pointer items-center justify-center px-2 focus:outline-none md:px-4'
         onClick={handlePrev}
       >
-        <span className='inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/30 group-hover:bg-primary/50 focus:ring-4 focus:ring-white group-focus:outline-none'>
+        <span className='inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary/30 group-hover:bg-primary/50 group-focus:outline-none focus:ring-4 focus:ring-white'>
           <svg
             className='w-4 h-4 text-white'
             aria-hidden='true'
@@ -44,10 +50,10 @@ export default function Carousel({ images, id }) {
       </button>
       <button
         type='button'
-        className='absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none'
+        className='group absolute right-0 top-0 z-30 flex h-full cursor-pointer items-center justify-center px-2 focus:outline-none md:px-4'
         onClick={handleNext}
       >
-        <span className='inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/30 group-hover:bg-primary/50 focus:ring-4 focus:ring-white group-focus:outline-none'>
+        <span className='inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary/30 group-hover:bg-primary/50 group-focus:outline-none focus:ring-4 focus:ring-white'>
           <svg
             className='w-4 h-4 text-white'
             aria-hidden='true'

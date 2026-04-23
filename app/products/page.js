@@ -1,7 +1,7 @@
 'use client'
 import Layout from '@/components/Layout'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import axios from 'axios'
 import ProductList from '@/components/ProductList'
 import Spinner from '../components/Spinner'
@@ -9,35 +9,27 @@ import Alert from '@/components/Alert'
 
 export default function Products() {
   const [products, setProducts] = useState([])
-  const [productStatus, setProductStatus] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
+    setLoading(true)
     try {
-      const response = await axios.get('api/products')
+      const response = await axios.get('/api/products')
       setProducts(response.data)
-      setProductStatus(response.status)
-      setError(null) // Clear any previous error
+      setError(null)
     } catch (error) {
       console.error('Error fetching data:', error)
-      setProductStatus(500) // Explicitly set status to 500 on error
-      setError('Please Wait until products is uploaded')
+      const fallbackError = error?.response?.data?.message || 'Failed loading products. Please try again.'
+      setError(fallbackError)
     } finally {
-      setLoading(false) // Set loading to false after data is fetched or if there's an error
+      setLoading(false)
     }
-  }
-
-  useEffect(() => {
-    fetchData()
   }, [])
 
   useEffect(() => {
-    if (productStatus === 500) {
-      const retryFetch = setTimeout(fetchData, 5000) // Retry fetch after 5 seconds
-      return () => clearTimeout(retryFetch)
-    }
-  }, [productStatus])
+    fetchData()
+  }, [fetchData])
 
   if (loading) {
     return <Spinner />
@@ -46,10 +38,17 @@ export default function Products() {
   return (
     <Layout>
       {error && <Alert alertMessage={error} alertType='error' />}
-      <Link className='btn-primary mb-4' href={'/products/new'}>
-        Add new product
-      </Link>
-      <h1>Products</h1>
+      <div className='mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between'>
+        <h1 className='m-0'>Products</h1>
+        <div className='flex gap-2'>
+          <button className='btn-default' onClick={fetchData}>
+            Refresh
+          </button>
+          <Link className='btn-primary' href={'/products/new'}>
+            Add new product
+          </Link>
+        </div>
+      </div>
       {products.length === 0 ? <p>No products found.</p> : <ProductList products={products} />}
     </Layout>
   )

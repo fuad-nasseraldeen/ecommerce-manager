@@ -1,6 +1,6 @@
 'use client'
 import Layout from '@/components/Layout'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import axios from 'axios'
 import { withSwal } from 'react-sweetalert2'
 import Spinner from '../components/Spinner'
@@ -18,20 +18,20 @@ function Categories({ swal }) {
   const [properties, setProperties] = useState([])
   const [loading, setLoading] = useState(true)
 
-  // Fetch categories effect
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get('/api/categories')
-        setCategories(response.data)
-      } catch (error) {
-        console.error('Error fetching data:', error)
-      } finally {
-        setLoading(false)
-      }
+  const fetchCategories = useCallback(async () => {
+    try {
+      const response = await axios.get('/api/categories')
+      setCategories(response.data)
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    } finally {
+      setLoading(false)
     }
-    fetchCategories()
   }, [])
+
+  useEffect(() => {
+    fetchCategories()
+  }, [fetchCategories])
 
   // Error handling effect
   useEffect(() => {
@@ -73,9 +73,7 @@ function Categories({ swal }) {
       setName('')
       setParentCategory('')
       setProperties([])
-      // Refetch categories to update the list
-      const response = await axios.get('/api/categories')
-      setCategories(response.data)
+      await fetchCategories()
     } catch (error) {
       console.error('Error saving category:', error)
     }
@@ -108,10 +106,8 @@ function Categories({ swal }) {
         if (result.isConfirmed) {
           try {
             const { _id } = category
-            await axios.delete('/api/categories?_id=' + _id)
-            // Refetch categories to update the list
-            const response = await axios.get('/api/categories')
-            setCategories(response.data)
+            await axios.delete('/api/categories?id=' + _id)
+            await fetchCategories()
           } catch (error) {
             console.error('Error deleting category:', error)
           }
@@ -152,8 +148,8 @@ function Categories({ swal }) {
       <h1>Categories</h1>
       <label>{editedCategory ? `Edit category ${editedCategory.name}` : 'Create new category'}</label>
       <form onSubmit={saveCategory}>
-        <div className='flex gap-1'>
-          <div>
+        <div className='flex flex-col gap-2 md:flex-row'>
+          <div className='w-full'>
             <input
               className={`${errors?.name ? 'mb-0 border-red-600' : ''}`}
               type='text'
@@ -168,7 +164,7 @@ function Categories({ swal }) {
               </>
             )}
           </div>
-          <select onChange={(ev) => setParentCategory(ev.target.value)} value={parentCategory}>
+          <select className='w-full md:max-w-xs' onChange={(ev) => setParentCategory(ev.target.value)} value={parentCategory}>
             <option value=''>No parent category</option>
             {categories.length > 0 &&
               categories.map((category) => (
@@ -185,7 +181,7 @@ function Categories({ swal }) {
           </button>
           {properties.length > 0 &&
             properties.map((property, index) => (
-              <div key={index} className='flex gap-1 mb-2'>
+              <div key={index} className='mb-2 flex flex-col gap-2 md:flex-row'>
                 <input
                   type='text'
                   value={property.name}
@@ -227,35 +223,39 @@ function Categories({ swal }) {
         </div>
       </form>
       {!editedCategory && (
-        <table className='basic mt-4'>
-          <thead>
-            <tr>
-              <td>Category name</td>
-              <td>Parent category</td>
-              <td></td>
-            </tr>
-          </thead>
-          <tbody>
-            {categories.length > 0 ? (
-              categories.map((category) => (
-                <tr key={category._id}>
-                  <td>{category.name}</td>
-                  <td>{category?.parent?.name}</td>
-                  <td>
-                    <button onClick={() => editCategory(category)} className='btn-default mr-1'>
-                      Edit
-                    </button>
-                    <button onClick={() => deleteCategory(category)} className='btn-red'>
-                      Delete
-                    </button>
-                  </td>
+        <div className='mt-4 overflow-x-auto rounded-xl'>
+          <table className='basic'>
+            <thead>
+              <tr>
+                <td>Category name</td>
+                <td>Parent category</td>
+                <td></td>
+              </tr>
+            </thead>
+            <tbody>
+              {categories.length > 0 ? (
+                categories.map((category) => (
+                  <tr key={category._id}>
+                    <td>{category.name}</td>
+                    <td>{category?.parent?.name || '-'}</td>
+                    <td className='whitespace-nowrap'>
+                      <button onClick={() => editCategory(category)} className='btn-default mr-1'>
+                        Edit
+                      </button>
+                      <button onClick={() => deleteCategory(category)} className='btn-red'>
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={3}>No categories found.</td>
                 </tr>
-              ))
-            ) : (
-              <p>No categories found.</p>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
+        </div>
       )}
     </Layout>
   )

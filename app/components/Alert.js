@@ -5,13 +5,13 @@ export default function Alert({ alertType, alertMessage }) {
 
   return (
     alertType && (
-      <div className='bg-red-700 text-center py-3 lg:px-4 rounded-2xl'>
+      <div className='rounded-xl bg-rose-600 px-3 py-2 text-center lg:px-4'>
         <div
-          className='p-2 bg-red-800 items-center text-red-100 rounded-md leading-none lg:rounded-full flex lg:inline-flex'
+          className='flex items-center rounded-md bg-rose-700 p-2 leading-none text-rose-100 lg:inline-flex lg:rounded-full'
           role='alert'
         >
-          <span className='flex rounded-full bg-red-500 uppercase px-2 py-1 text-xs font-bold mr-3'>Error</span>
-          <span className='font-semibold mr-2 text-left flex-auto'>{alertMessage}</span>
+          <span className='mr-3 flex rounded-full bg-rose-500 px-2 py-1 text-xs font-bold uppercase'>Error</span>
+          <span className='mr-2 flex-auto text-left font-semibold'>{alertMessage}</span>
         </div>
       </div>
     )

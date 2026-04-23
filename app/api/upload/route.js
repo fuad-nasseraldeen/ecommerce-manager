@@ -4,6 +4,8 @@ import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client
 import { mongooseConnect } from 'base/lib/mongoose'
 // import { isAdminRequest } from '@/api/auth/[...nextauth]/route'
 
+export const dynamic = 'force-dynamic'
+
 const bucketName = process.env.AWS_BUCKET_NAME
 
 const s3 = new S3Client({
