@@ -1,24 +1,38 @@
 import { NextResponse } from 'next/server'
 import mime from 'mime-types'
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3'
-import { mongooseConnect } from 'base/lib/mongoose'
 // import { isAdminRequest } from '@/api/auth/[...nextauth]/route'
 
 export const dynamic = 'force-dynamic'
 
 const bucketName = process.env.AWS_BUCKET_NAME
+const region = process.env.AWS_REGION
+const accessKeyId = process.env.S3_ACCESS_KEY
+const secretAccessKey = process.env.S3_SECRET_ACCESS_KEY
 
 const s3 = new S3Client({
-  region: process.env.AWS_REGION,
+  region,
   credentials: {
-    accessKeyId: process.env.S3_ACCESS_KEY,
-    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+    accessKeyId,
+    secretAccessKey,
   },
 })
 
+function validateAwsEnv() {
+  const missing = []
+  if (!bucketName) missing.push('AWS_BUCKET_NAME')
+  if (!region) missing.push('AWS_REGION')
+  if (!accessKeyId) missing.push('S3_ACCESS_KEY')
+  if (!secretAccessKey) missing.push('S3_SECRET_ACCESS_KEY')
+  return missing
+}
+
 export async function POST(req) {
-  await mongooseConnect()
   // await isAdminRequest(req, res)
+  const missingEnv = validateAwsEnv()
+  if (missingEnv.length > 0) {
+    return NextResponse.json({ error: `Missing AWS env vars: ${missingEnv.join(', ')}` }, { status: 500 })
+  }
 
   const formData = await req.formData()
   const file = formData.get('file')
@@ -43,7 +57,7 @@ export async function POST(req) {
 
     await s3.send(putObjectCommand)
 
-    const link = `https://${bucketName}.s3.${process.env.AWS_REGION}.amazonaws.com/${newFilename}`
+    const link = `https://${bucketName}.s3.${region}.amazonaws.com/${newFilename}`
     return NextResponse.json({ link: [link] })
   } catch (error) {
     console.error('Error uploading file to S3:', error)
@@ -53,7 +67,11 @@ export async function POST(req) {
 
 export async function DELETE(req, res) {
   try {
-    await mongooseConnect()
+    const missingEnv = validateAwsEnv()
+    if (missingEnv.length > 0) {
+      return new Response(JSON.stringify({ error: `Missing AWS env vars: ${missingEnv.join(', ')}` }), { status: 500 })
+    }
+
     const { searchParams } = new URL(req.url)
     const url = searchParams.get('id')
     if (!url) {
